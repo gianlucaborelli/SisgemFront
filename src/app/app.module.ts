@@ -11,8 +11,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogService } from './services/confirm-dialog.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingScreenComponent } from './components/shared/loading-screen/loading-screen/loading-screen.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoadingInterceptorInterceptor } from './interceptors/loading-interceptor/loading-interceptor.interceptor';
+
+
 
 
 
@@ -30,6 +36,8 @@ export function initializeDialogService() {
     FooterComponent,
     HeaderComponent,
     NavComponent,
+    LoadingScreenComponent,
+    
     
   ],
   imports: [
@@ -40,7 +48,8 @@ export function initializeDialogService() {
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    MatDialogModule 
+    MatDialogModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     importProvidersFrom(MatDialogModule),
@@ -49,6 +58,11 @@ export function initializeDialogService() {
       useFactory: initializeDialogService,
       deps: [MatDialog],
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptorInterceptor,
+      multi:true
     }
   ],
   bootstrap: [AppComponent]
